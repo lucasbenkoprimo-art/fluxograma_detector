@@ -7,49 +7,35 @@ flowchart TD
     classDef alerta fill:#fbb,stroke:#333,stroke-width:2px;
 
     %% Setup
-    Start([Início: Ligar Arduino]) --> Setup[Abre Serial & Conecta ao Blynk]
-    Setup --> Calibra[Lê NTC inicial e define Pico Recente]
-    Calibra --> LoopStart[Início do LOOP]
+    Start([Inicio Ligar Arduino]) --> Setup[Abre Serial e Conecta ao Blynk]
+    Setup --> Calibra[Le NTC inicial e define Pico Recente]
+    Calibra --> LoopStart[Inicio do LOOP]
 
     %% Loop Geral
     LoopStart --> BlynkRun[Blynk.run]
-    BlynkRun --> LeNTC["Lê ADC e calcula Temperatura Atual °C"]
+    BlynkRun --> LeNTC[Le ADC e calcula Temperatura Atual]
     
     %% Bloco de Rastreamento de Pico
-    LeNTC --> Decisao1{Temp Atual > Pico Recente?}
+    LeNTC --> Decisao1{Temp Atual maior que Pico Recente?}
     
-    Decisao1 -- Sim --> AtualizaPico["Pico Recente = Temp Atual<br>Reseta timer da respiração"]
-    AtualizaPico --> DecisaoAutoCura{Alerta está ativo?}
-    DecisaoAutoCura -- Sim --> AutoCura["Alerta = 0<br>Serial: Respiração Normalizada"]
-    DecisaoAutoCura -- Não --> CalcQueda
+    Decisao1 -- Sim --> AtualizaPico[Pico Recente igual Temp Atual e Reseta timer da respiracao]
+    AtualizaPico --> DecisaoAutoCura{Alerta esta ativo?}
+    DecisaoAutoCura -- Sim --> AutoCura[Alerta igual 0 e Limpa Alerta no Serial]
+    DecisaoAutoCura -- Nao --> CalcQueda
     AutoCura --> CalcQueda
     
-    Decisao1 -- Não --> Decaimento["Decaimento lento do Pico<br>Pico = Pico - 0.002"]
+    Decisao1 -- Nao --> Decaimento[Decaimento lento do Pico]
     Decaimento --> CalcQueda
 
     %% Bloco de Queda e Print
-    CalcQueda[Calcula Queda = Pico - Temp Atual]
-    CalcQueda --> DecisaoPrint{Alerta == 0?}
-    DecisaoPrint -- Sim --> PrintSerial[Exibe Temp, Pico e Queda no Serial]
-    DecisaoPrint -- Não --> DecisaoDisparo
+    CalcQueda[Calcula Queda igual Pico menos Temp Atual]
+    CalcQueda --> DecisaoPrint{Alerta igual 0?}
+    DecisaoPrint -- Sim --> PrintSerial[Exibe dados no Serial]
+    DecisaoPrint -- Nao --> DecisaoDisparo
     PrintSerial --> DecisaoDisparo
 
     %% Bloco de Alarme / Disparo
-    DecisaoDisparo["Queda > 0.5 E<br>Sem respirar > 10s?"]
-    DecisaoDisparo -- Sim --> DecisaoSpam{Alerta == 0?}
-    DecisaoSpam -- Sim --> DisparaAlerta:::alerta["Serial: APNEIA DETECTADA<br>Blynk: Envia Notificação<br>Alerta = 1"]
-    DecisaoSpam -- Não --> DecisaoReset
-    DisparaAlerta --> DecisaoReset
-    DecisaoDisparo -- Não --> DecisaoReset
-
-    %% Bloco de Reset Ambiental
-    DecisaoReset{Tempo do Quarto > 60s?}
-    DecisaoReset -- Sim --> ResetAmbiente["Pico Recente = Temp Atual<br>Reseta timer do ambiente"]
-    DecisaoReset -- Não --> DelayFim
-    ResetAmbiente --> DelayFim
-
-    %% Fim do Ciclo
-    DelayFim[Delay 150ms] --> LoopStart
-
-    class Start,LoopStart inicio_fim;
-    class Decisao1,DecisaoAutoCura,DecisaoPrint,DecisaoDisparo,DecisaoSpam,DecisaoReset decisao;
+    DecisaoDisparo{Queda maior que 0.5 e Sem respirar maior que 10s?}
+    DecisaoDisparo -- Sim --> DecisaoSpam{Alerta igual 0?}
+    DecisaoSpam -- Sim --> DisparaAlerta:::alerta(ALERTA APNEIA DETECTADA - Envia para o Blynk e Alerta igual 1)
+    DecisaoSpam -- Nao --> Dec

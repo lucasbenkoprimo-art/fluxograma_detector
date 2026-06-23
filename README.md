@@ -37,5 +37,21 @@ flowchart TD
     %% Bloco de Alarme / Disparo
     DecisaoDisparo{Queda maior que 0.5 e Sem respirar maior que 10s?}
     DecisaoDisparo -- Sim --> DecisaoSpam{Alerta igual 0?}
-    DecisaoSpam -- Sim --> DisparaAlerta:::alerta(ALERTA APNEIA DETECTADA - Envia para o Blynk e Alerta igual 1)
-    DecisaoSpam -- Nao --> Dec
+    DecisaoSpam -- Sim --> DisparaAlerta[ALERTA APNEIA DETECTADA - Envia para o Blynk e Alerta igual 1]
+    DecisaoSpam -- Nao --> DecisaoReset
+    DisparaAlerta --> DecisaoReset
+    DecisaoDisparo -- Nao --> DecisaoReset
+
+    %% Bloco de Reset Ambiental
+    DecisaoReset{Tempo do Quarto maior que 60s?}
+    DecisaoReset -- Sim --> ResetAmbiente[Pico Recente igual Temp Atual e Reseta timer ambiente]
+    DecisaoReset -- Nao --> DelayFim
+    ResetAmbiente --> DelayFim
+
+    %% Fim do Ciclo
+    DelayFim[Delay 150ms] --> LoopStart
+
+    %% Aplicacao dos Estilos nas Caixas
+    class Start,LoopStart inicio_fim;
+    class Decisao1,DecisaoAutoCura,DecisaoPrint,DecisaoDisparo,DecisaoSpam,DecisaoReset decisao;
+    class DisparaAlerta alerta;

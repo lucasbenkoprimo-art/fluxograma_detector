@@ -13,18 +13,18 @@ flowchart TD
 
     %% Loop Geral
     LoopStart --> BlynkRun[Blynk.run]
-    BlynkRun --> LeNTC[Lê ADC e calcula Temperatura Atual °C]
+    BlynkRun --> LeNTC["Lê ADC e calcula Temperatura Atual °C"]
     
     %% Bloco de Rastreamento de Pico
     LeNTC --> Decisao1{Temp Atual > Pico Recente?}
     
-    Decisao1 -- Sim --> AtualizaPico[Pico Recente = Temp Atual<br>Reseta timer da respiração]
+    Decisao1 -- Sim --> AtualizaPico["Pico Recente = Temp Atual<br>Reseta timer da respiração"]
     AtualizaPico --> DecisaoAutoCura{Alerta está ativo?}
-    DecisaoAutoCura -- Sim --> AutoCura[Alerta = 0<br>Serial: Respiração Normalizada]
+    DecisaoAutoCura -- Sim --> AutoCura["Alerta = 0<br>Serial: Respiração Normalizada"]
     DecisaoAutoCura -- Não --> CalcQueda
     AutoCura --> CalcQueda
     
-    Decisao1 -- Não --> Decaimento[Decaimento lento do Pico<br>Pico = Pico - 0.002]
+    Decisao1 -- Não --> Decaimento["Decaimento lento do Pico<br>Pico = Pico - 0.002"]
     Decaimento --> CalcQueda
 
     %% Bloco de Queda e Print
@@ -35,16 +35,16 @@ flowchart TD
     PrintSerial --> DecisaoDisparo
 
     %% Bloco de Alarme / Disparo
-    DecisaoDisparo{Queda > 0.5 E<br>Sem respirar > 10s?}
+    DecisaoDisparo["Queda > 0.5 E<br>Sem respirar > 10s?"]
     DecisaoDisparo -- Sim --> DecisaoSpam{Alerta == 0?}
-    DecisaoSpam -- Sim --> DisparaAlerta:::alerta[Serial: APNEIA DETECTADA<br>Blynk: Envia Notificação<br>Alerta = 1]
+    DecisaoSpam -- Sim --> DisparaAlerta:::alerta["Serial: APNEIA DETECTADA<br>Blynk: Envia Notificação<br>Alerta = 1"]
     DecisaoSpam -- Não --> DecisaoReset
     DisparaAlerta --> DecisaoReset
     DecisaoDisparo -- Não --> DecisaoReset
 
     %% Bloco de Reset Ambiental
     DecisaoReset{Tempo do Quarto > 60s?}
-    DecisaoReset -- Sim --> ResetAmbiente[Pico Recente = Temp Atual<br>Reseta timer do ambiente]
+    DecisaoReset -- Sim --> ResetAmbiente["Pico Recente = Temp Atual<br>Reseta timer do ambiente"]
     DecisaoReset -- Não --> DelayFim
     ResetAmbiente --> DelayFim
 

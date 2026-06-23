@@ -1,4 +1,4 @@
-# fluxograma_detector
+```mermaid
 flowchart TD
     %% Estilos
     classDef inicio_fim fill:#f9f,stroke:#333,stroke-width:2px;

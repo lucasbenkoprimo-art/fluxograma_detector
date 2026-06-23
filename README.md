@@ -1,10 +1,10 @@
 ```mermaid
 flowchart TD
-    %% Estilos
-    classDef inicio_fim fill:#f9f,stroke:#333,stroke-width:2px;
-    classDef processo fill:#bbf,stroke:#333,stroke-width:1px;
-    classDef decisao fill:#ffb,stroke:#333,stroke-width:1px;
-    classDef alerta fill:#fbb,stroke:#333,stroke-width:2px;
+    %% Definição de Cores Novas e Legíveis (Estilo Tons Pastéis com Alto Contraste)
+    classDef inicio_fim fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px,color:#0d47a1;
+    classDef processo fill:#f5f5f5,stroke:#424242,stroke-width:1px,color:#212121;
+    classDef decisao fill:#fffde7,stroke:#fbc02d,stroke-width:1px,color:#f57f17;
+    classDef alerta fill:#ffebee,stroke:#c62828,stroke-width:2px,color:#b71c1c;
 
     %% Setup
     Start([Inicio Ligar Arduino]) --> Setup[Abre Serial e Conecta ao Blynk]

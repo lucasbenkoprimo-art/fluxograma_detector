@@ -1,0 +1,1 @@
+# fluxograma_detector
